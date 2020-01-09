@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './utils/register-vant'
 import 'amfe-flexible'
+import './utils/validate'
 
 import './styles/index.less'
 
