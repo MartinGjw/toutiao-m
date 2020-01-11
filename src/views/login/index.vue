@@ -56,15 +56,16 @@ export default {
           const errors = this.$refs.form.errors
           // forEach 无法停止
           // find 方法会遍历数组，对每个元素执行方法中的条件判定
-          // const item = Object.values(errors).find(item => item[0])
+          const item = Object.values(errors).find(item => item[0])
           // 找到第1个有错误的字段并弹出提示
-          for (let key in errors) {
-            const item = errors[key]
-            if (item[0]) {
-              this.$toast(item[0])
-              return
-            }
-          }
+          // for (let key in errors) {
+          //   const item = errors[key]
+          //   if (item[0]) {
+          //     this.$toast(item[0])
+          //     return
+          //   }
+          // }
+          this.$toast(item[0])
         }, 100)
         return
       }
@@ -76,7 +77,9 @@ export default {
       try {
         const res = await login(this.user)
         console.log(res)
+        this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
+        this.$router.push('/')
       } catch (err) {
         console.log('登陆失败', err)
         this.$toast.fail('登录失败，手机号或验证码错误')
