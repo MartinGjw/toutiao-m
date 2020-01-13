@@ -1,5 +1,5 @@
 <template>
-<div class="articlelist">
+ <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
   <!-- List 组件通过loading和finished两个变量控制加载状态，当组件滚动到底部时，
   会触发load事件并将loading设置成true。此时可以发起异步操作并更新数据，数据更新完毕后，
   将loading设置成false即可。若数据已全部加载完毕，则直接将finished设置成true即可。 -->
@@ -15,7 +15,7 @@
            :title="article.title"
           />
       </van-list>
-</div>
+</van-pull-refresh>
 </template>
 
 <script>
@@ -26,7 +26,8 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      timestamp: null
+      timestamp: null,
+      isLoading: false
     }
   },
   props: {
@@ -36,6 +37,21 @@ export default {
     }
   },
   methods: {
+    async onRefresh () {
+      const { data } = await getArticles({
+        channel_id: this.channels.id,
+        timestamp: Date.now(),
+        with_top: 1
+      })
+      const { results } = data.data
+      this.list.shift(...results)
+      this.isLoading = false
+      this.$toast(`更新了${results.length}条数据`)
+      // setTimeout(() => {
+      //   this.isLoading = false
+      //   this.count++
+      // }, 500)
+    },
     async onLoad () {
       const { data } = await getArticles({
         channel_id: this.channels.id,
@@ -44,7 +60,7 @@ export default {
       })
       const results = data.data.results
       this.list.push(...results)
-      console.log(this.list)
+      // console.log(this.list)
 
       // 异步更新数据
       //   setTimeout(() => {

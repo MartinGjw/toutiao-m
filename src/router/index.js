@@ -18,6 +18,18 @@ const routes = [
     component: () => import('@/views/login')
   },
   {
+    path: '/search',
+    component: () => import('@/views/search')
+  },
+  {
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('@/views/article'),
+    // 将路由参数映射到组件的 props 数据中
+    // 参考文档：https://router.vuejs.org/zh/guide/essentials/passing-props.html
+    props: true
+  },
+  {
     path: '/',
     component: () => import('../views/tabbar'),
     children: [
